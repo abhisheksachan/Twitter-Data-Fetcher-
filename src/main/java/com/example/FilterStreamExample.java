@@ -52,11 +52,11 @@ public class FilterStreamExample {
     BlockingQueue<String> queue = new LinkedBlockingQueue<String>(10000);
     StatusesFilterEndpoint endpoint = new StatusesFilterEndpoint();
     // add some track terms
-    endpoint.trackTerms(Lists.newArrayList("twitterapi","#BuenLunes"));
+    endpoint.trackTerms(Lists.newArrayList("twitterapi","#Sex"));
 
     
-    //ElasticDemo ed=new ElasticDemo();
-    test ed = new test();
+   // ElasticDemo ed=new ElasticDemo();
+   // test ed = new test();
     
     Authentication auth = new OAuth1(consumerKey, consumerSecret, token, secret);
     // Authentication auth = new BasicAuth(username, password);
@@ -64,7 +64,7 @@ public class FilterStreamExample {
    
    
        
-    File file = new File("/usr/local/Output19.txt");
+    File file = new File("/usr/local/Sex.txt");
     
     if (!file.exists()) {
         try {
@@ -92,7 +92,7 @@ public class FilterStreamExample {
     client.connect();
 
     // Do whatever needs to be done with messages
-    for (int msgRead = 1; msgRead < 32000; msgRead++) {
+    for (int msgRead = 1; msgRead <=32000;msgRead++ ) {
       String msg = queue.take();
       char s= msg.charAt(2);
     		  if(s!='d')
@@ -101,7 +101,7 @@ public class FilterStreamExample {
     		  else
     		  {continue;}
     		  
-    ed.store(msg,msgRead);	  
+   // ed.store(msg,msgRead);	  
       
       //es.input(msg);
 

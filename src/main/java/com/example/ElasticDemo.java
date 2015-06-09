@@ -49,6 +49,7 @@ public class ElasticDemo {
 		
 		 BulkRequestBuilder bulkRequest = transportClient.prepareBulk();
 		 Map<String,Object> jsonDocument = new HashMap<String,Object>();
+		 Map<String,Object> jsonDocument1 = new HashMap<String,Object>();
 		
 		//final Node node = nodeBuilder().clusterName("prophesee").node();
 		
@@ -75,7 +76,7 @@ public class ElasticDemo {
 				Boolean truncated =(Boolean) jobject.get("truncated");
 				jsonDocument.put("truncated", truncated);
 				
-				if(jobject.isNull("in_reply_to_status_id"))
+	/*			if(jobject.isNull("in_reply_to_status_id"))
 			    {
 			       jobject.put("in_reply_to_status_id", 0L);
 			       
@@ -83,7 +84,7 @@ public class ElasticDemo {
 				long in_reply_to_status_id=(Long) jobject.get("in_reply_to_status_id");
 				jsonDocument.put("in_reply_to_status_id", in_reply_to_status_id);
 				
-				
+	*/			
 				if(jobject.isNull("in_reply_to_status_id_str"))
 			    {
 			       jobject.put("in_reply_to_status_id_str", "null");
@@ -94,14 +95,14 @@ public class ElasticDemo {
 				
 				
 				
-				if(jobject.isNull("in_reply_to_user_id"))
+	/*			if(jobject.isNull("in_reply_to_user_id"))
 			    {
 			       jobject.put("in_reply_to_user_id",0);
 			       
 			    }
 				int in_reply_to_user_id=(Integer) jobject.get("in_reply_to_user_id");
 				jsonDocument.put("in_reply_to_user_id", in_reply_to_user_id);
-				
+	*/			
 				
 				if(jobject.isNull("in_reply_to_user_id_str"))
 			    {
@@ -349,8 +350,13 @@ public class ElasticDemo {
 				List<String> screen_name=new ArrayList<String>();
 				List<String> name=new ArrayList<String>();
 				List<String> uid_str=new ArrayList<String>();
-				
-				
+				List<String> mid_str=new ArrayList<String>();
+				List<String> media_url=new ArrayList<String>();
+				List<String> media_url_https=new ArrayList<String>();
+				List<String> murl=new ArrayList<String>();
+				List<String> mexpandedurl=new ArrayList<String>();
+				List<String> mdisplayurl=new ArrayList<String>();
+							
 				
 				JSONObject entity =(JSONObject) jobject.get("entities");
 				
@@ -415,6 +421,51 @@ public class ElasticDemo {
 		          
 				}
 				
+				if(entity.has("media"))
+				{
+					System.out.println("-----has Media-----");
+				
+				JSONArray med=(JSONArray) entity.get("media");
+				int length4 = med.length();
+		  // take each value from the json array separately
+		  
+				for(int i=0;i<length4;i++)
+				{
+				JSONObject innerObj = med.getJSONObject(i);
+					
+				String text1=(String) innerObj.get("id_str");
+			  		mid_str.add(text1);
+			  		
+			  		String text2=(String) innerObj.get("media_url");
+			  		media_url.add(text2);
+			  		
+			  		String text3=(String) innerObj.get("media_url_https");
+			  		media_url_https.add(text3);
+		  		
+					
+				String text4=(String) innerObj.get("url");
+		  		murl.add(text4);
+		  	//	System.out.println("url***********"+text1);
+		  		
+		  		String text5=(String) innerObj.get("expanded_url");
+		  		mexpandedurl.add(text5);
+		  		//System.out.println("expandedurl***********"+text2);
+		  		
+		  		String text6=(String) innerObj.get("display_url");
+		  		mdisplayurl.add(text6);
+		  		//System.out.println("displayurl***********"+text3);
+		  		
+				}
+		  		
+				jsonDocument.put("media id str",mid_str);
+				jsonDocument.put("media url",media_url);
+				jsonDocument.put("media url https ",media_url_https);
+				jsonDocument.put("m url",murl);
+				jsonDocument.put("m display url",mdisplayurl);
+				jsonDocument.put("m expanded url",mexpandedurl);
+				
+				}	
+				
 				jsonDocument.put("hashtags",htext);
 				jsonDocument.put("tweet url",url);
 				jsonDocument.put("tweet expanded url",expandedurl);
@@ -423,6 +474,7 @@ public class ElasticDemo {
 				jsonDocument.put("user mention name",name);
 				jsonDocument.put("user mention id",uid_str);
 				
+									
 				Boolean favorited=(Boolean) jobject.get("favorited");
 				Boolean retweeted=(Boolean) jobject.get("retweeted");
 				Boolean p_sensitive=(Boolean) jobject.get("possibly_sensitive");
@@ -441,32 +493,34 @@ public class ElasticDemo {
 				
 				if(jobject.has("retweeted_status"))
 			{
+					
+					System.out.println("-----is a retweeted tweet-------");
 				JSONObject rjobject =(JSONObject) jobject.get("retweeted_status");
 					
 				
 				String rcreated_at=(String) rjobject.get("created_at");
-				jsonDocument.put("r created_at", rcreated_at);
+				jsonDocument1.put("r created_at", rcreated_at);
 				
 				String rid_str =  (String) rjobject.get("id_str");
-				jsonDocument.put("r id_str",rid_str);
+				jsonDocument1.put("r id_str",rid_str);
 				
 				String rtext=(String) rjobject.get("text");
-				jsonDocument.put("r text", rtext);
+				jsonDocument1.put("r text", rtext);
 				
 				String rsourcee=(String) rjobject.get("source");
-				jsonDocument.put("r source", rsourcee);
+				jsonDocument1.put("r source", rsourcee);
 				
 				Boolean rtruncated =(Boolean) rjobject.get("truncated");
-				jsonDocument.put("r truncated", rtruncated);
+				jsonDocument1.put("r truncated", rtruncated);
 				
-				if(rjobject.isNull("in_reply_to_status_id"))
+		/*		if(rjobject.isNull("in_reply_to_status_id"))
 			    {
 			       rjobject.put("in_reply_to_status_id", 0L);
 			       
 			    }
 				long rin_reply_to_status_id=(Long) rjobject.get("in_reply_to_status_id");
-				jsonDocument.put("r in_reply_to_status_id", rin_reply_to_status_id);
-				
+				jsonDocument1.put("r in_reply_to_status_id", rin_reply_to_status_id);
+			*/	
 				
 				if(rjobject.isNull("in_reply_to_status_id_str"))
 			    {
@@ -474,26 +528,26 @@ public class ElasticDemo {
 			       
 			    }
 				String rin_reply_to_status_id_str=(String) rjobject.get("in_reply_to_status_id_str");
-				jsonDocument.put("r in_reply_to_status_id_str", rin_reply_to_status_id_str);
+				jsonDocument1.put("r in_reply_to_status_id_str", rin_reply_to_status_id_str);
 				
 				
 				
-				if(rjobject.isNull("in_reply_to_user_id"))
+		/*		if(rjobject.isNull("in_reply_to_user_id"))
 			    {
-			       rjobject.put("in_reply_to_user_id",0);
+			       rjobject.put("in_reply_to_user_id",0L);
 			       
 			    }
-				int rin_reply_to_user_id=(Integer) rjobject.get("in_reply_to_user_id");
-				jsonDocument.put("r in_reply_to_user_id", rin_reply_to_user_id);
+				long rin_reply_to_user_id=(Long) rjobject.get("in_reply_to_user_id");
+				jsonDocument1.put("r in_reply_to_user_id", rin_reply_to_user_id);
 				
-				
+			*/	
 				if(rjobject.isNull("in_reply_to_user_id_str"))
 			    {
 			       rjobject.put("in_reply_to_user_id_str","null");
 			       
 			    }
 				String rin_reply_to_user_id_str=(String) rjobject.get("in_reply_to_user_id_str");
-				jsonDocument.put("r in_reply_to_user_id_str", rin_reply_to_user_id_str);
+				jsonDocument1.put("r in_reply_to_user_id_str", rin_reply_to_user_id_str);
 				
 				
 				if(rjobject.isNull("in_reply_to_screen_name"))
@@ -502,7 +556,7 @@ public class ElasticDemo {
 			       
 			    }
 				String rin_reply_to_screen_name=(String) rjobject.get("in_reply_to_screen_name");
-				jsonDocument.put("r in_reply_to_screen_name", rin_reply_to_screen_name);
+				jsonDocument1.put("r in_reply_to_screen_name", rin_reply_to_screen_name);
 				
 			
 				
@@ -510,14 +564,14 @@ public class ElasticDemo {
 				
 				//long u_id=(Long) user.get("id");
 				String ru_id_str=(String) ruser.get("id_str");
-				jsonDocument.put("r user id",ru_id_str);
+				jsonDocument1.put("r user id",ru_id_str);
 				
 				String ru_name=(String) ruser.get("name");
-				jsonDocument.put("r user name", ru_name);
+				jsonDocument1.put("r user name", ru_name);
 				String ru_screen_name=(String) ruser.get("screen_name");
-				jsonDocument.put("r user screen name",ru_screen_name);
+				jsonDocument1.put("r user screen name",ru_screen_name);
 				String ru_location=(String) ruser.get("location");
-				jsonDocument.put("r user location",ru_location);
+				jsonDocument1.put("r user location",ru_location);
 				
 				if(ruser.isNull("url"))
 			    {
@@ -525,93 +579,93 @@ public class ElasticDemo {
 			       
 			    }
 				String ru_url=(String) ruser.get("url");
-				jsonDocument.put("r user url",ru_url);
+				jsonDocument1.put("r user url",ru_url);
 				if(ruser.isNull("description"))
 			    {
 			       ruser.put("description", "null");
 			       
 			    }
 				String ru_description=(String) ruser.get("description");
-				jsonDocument.put("r user description",ru_description);
+				jsonDocument1.put("r user description",ru_description);
 				Boolean ru_protected=(Boolean) ruser.get("protected");
-				jsonDocument.put("r user protected",ru_protected);
+				jsonDocument1.put("r user protected",ru_protected);
 				Boolean ru_verified=(Boolean) ruser.get("verified");
-				jsonDocument.put("r user verified",ru_verified);
+				jsonDocument1.put("r user verified",ru_verified);
 				int ru_followers_count=(Integer) ruser.get("followers_count");
-				jsonDocument.put("r user follwers count",ru_followers_count);
+				jsonDocument1.put("r user follwers count",ru_followers_count);
 				int ru_friends_count=(Integer) ruser.get("friends_count");
-				jsonDocument.put("r user friends count",ru_friends_count);
+				jsonDocument1.put("r user friends count",ru_friends_count);
 				
 				int ru_listed_count=(Integer) ruser.get("listed_count");
-				jsonDocument.put("r user_listed_count",ru_listed_count);
+				jsonDocument1.put("r user_listed_count",ru_listed_count);
 				int ru_favourites_count=(Integer) ruser.get("favourites_count");
-				jsonDocument.put("r user favourites count",ru_favourites_count);
+				jsonDocument1.put("r user favourites count",ru_favourites_count);
 				int ru_statuses_count=(Integer) ruser.get("statuses_count");
-				jsonDocument.put("r user status count",ru_statuses_count);
+				jsonDocument1.put("r user status count",ru_statuses_count);
 				String ru_created_at=(String) ruser.get("created_at");
-				jsonDocument.put("r user created_at",ru_created_at);
+				jsonDocument1.put("r user created_at",ru_created_at);
 				if(ruser.isNull("utc_offset"))
 			    {
 			       ruser.put("utc_offset", 0);
 			       
 			    }
 				int ru_utc_offset=(Integer) ruser.get("utc_offset");
-				jsonDocument.put("r utc_offset",ru_utc_offset);
-				if(user.isNull("time_zone"))
+				jsonDocument1.put("r utc_offset",ru_utc_offset);
+				if(ruser.isNull("time_zone"))
 			    {
-			       user.put("time_zone","null");
+			       ruser.put("time_zone","null");
 			       
 			    }
 				String ru_time_zone=(String) ruser.get("time_zone");
-				jsonDocument.put("r time_zone",ru_time_zone);
+				jsonDocument1.put("r time_zone",ru_time_zone);
 				Boolean ru_geo_enabled=(Boolean) ruser.get("geo_enabled");
-				jsonDocument.put("r geo_enabled",ru_geo_enabled);
+				jsonDocument1.put("r geo_enabled",ru_geo_enabled);
 				String ru_lang=(String) ruser.get("lang");
-				jsonDocument.put("r user language",ru_lang);
+				jsonDocument1.put("r user language",ru_lang);
 				Boolean ru_contributors_enabled=(Boolean) ruser.get("contributors_enabled");
-				jsonDocument.put("r contributors enabled",ru_contributors_enabled);
+				jsonDocument1.put("r contributors enabled",ru_contributors_enabled);
 				Boolean ru_is_translator=(Boolean) ruser.get("is_translator");
-				jsonDocument.put("r is translator",ru_is_translator);
+				jsonDocument1.put("r is translator",ru_is_translator);
 				String ru_p_b_color=(String) ruser.get("profile_background_color");
-				jsonDocument.put("r profile background color",ru_p_b_color);
+				jsonDocument1.put("r profile background color",ru_p_b_color);
 				String ru_p_b_image_url=(String) ruser.get("profile_background_image_url");
-				jsonDocument.put("r profile background image url",ru_p_b_image_url);
+				jsonDocument1.put("r profile background image url",ru_p_b_image_url);
 				String ru_p_b_image_url_https=(String) ruser.get("profile_background_image_url_https");
-				jsonDocument.put("r profile background image url https",ru_p_b_image_url_https);
+				jsonDocument1.put("r profile background image url https",ru_p_b_image_url_https);
 				Boolean ru_p_b_tile=(Boolean) ruser.get("profile_background_tile");
-				jsonDocument.put("r profile background tile",ru_p_b_tile);
+				jsonDocument1.put("r profile background tile",ru_p_b_tile);
 				String ru_p_link_color=(String) ruser.get("profile_link_color");
-				jsonDocument.put("r profile link color",ru_p_link_color);
+				jsonDocument1.put("r profile link color",ru_p_link_color);
 				String ru_s_border_color=(String) ruser.get("profile_sidebar_border_color");
-				jsonDocument.put("r profile sidebar border color",ru_s_border_color);
+				jsonDocument1.put("r profile sidebar border color",ru_s_border_color);
 				String ru_p_s_fill_color=(String) ruser.get("profile_sidebar_fill_color");
-				jsonDocument.put("r profile sidebar fill color",ru_p_s_fill_color);
+				jsonDocument1.put("r profile sidebar fill color",ru_p_s_fill_color);
 				String ru_p_text_color=(String) ruser.get("profile_text_color");
-				jsonDocument.put("r profile text color",ru_p_text_color);
+				jsonDocument1.put("r profile text color",ru_p_text_color);
 				Boolean ru_p_u_b_image=(Boolean) ruser.get("profile_use_background_image");
-				jsonDocument.put("r profile use background image",ru_p_u_b_image);
+				jsonDocument1.put("r profile use background image",ru_p_u_b_image);
 				String ru_p_image_url=(String) ruser.get("profile_image_url");
-				jsonDocument.put("r profile image url",ru_p_image_url);
+				jsonDocument1.put("r profile image url",ru_p_image_url);
 				String ru_p_image_url_https=(String) ruser.get("profile_image_url_https");
-				jsonDocument.put("r profile image url https",ru_p_image_url_https);
+				jsonDocument1.put("r profile image url https",ru_p_image_url_https);
 				Boolean ru_d_profile=(Boolean) ruser.get("default_profile");
-				jsonDocument.put("r default_image",ru_d_profile);
+				jsonDocument1.put("r default_image",ru_d_profile);
 				Boolean ru_d_profile_image=(Boolean) ruser.get("default_profile_image");
-				jsonDocument.put("r default profile image",ru_d_profile_image);
-				if(user.isNull("following"))
+				jsonDocument1.put("r default profile image",ru_d_profile_image);
+				if(ruser.isNull("following"))
 			    {
-			       user.put("following", "null");
+			       ruser.put("following", "null");
 			       
 			    }
 				String ru_following=(String) ruser.get("following");
-				jsonDocument.put("r user followers",ru_following);
+				jsonDocument1.put("r user followers",ru_following);
 				if(ruser.isNull("follow_request_sent"))
 			    {
 			       ruser.put("follow_request_sent", "null");
 			       
 			    }
 				String ru_follow_request_sent=(String) ruser.get("follow_request_sent");
-				jsonDocument.put("r user follow request sent",ru_follow_request_sent);
+				jsonDocument1.put("r user follow request sent",ru_follow_request_sent);
 				
 				
 				if(ruser.isNull("notifications"))
@@ -620,7 +674,7 @@ public class ElasticDemo {
 			       
 			    }
 				String ru_notifications=(String) ruser.get("notifications");
-				jsonDocument.put("r user notifications",ru_notifications);
+				jsonDocument1.put("r user notifications",ru_notifications);
 						
 				
 				if(rjobject.isNull("geo"))
@@ -655,7 +709,7 @@ public class ElasticDemo {
 					 }
 
 				}
-				jsonDocument.put("r user coordinates",rcord);
+				jsonDocument1.put("r user coordinates",rcord);
 				
 /*
 				if(jobject.isNull("place"))
@@ -672,11 +726,11 @@ public class ElasticDemo {
 			       
 			    }
 				String rcontri=(String) rjobject.get("contributors");
-				jsonDocument.put("r user contributors",rcontri);
+				jsonDocument1.put("r user contributors",rcontri);
 				int rretweet =(Integer) rjobject.get("retweet_count");
-				jsonDocument.put("r user retweet count",rretweet);
+				jsonDocument1.put("r user retweet count",rretweet);
 				int rfav_count =(Integer) rjobject.get("favorite_count");
-				jsonDocument.put("r user favorite count",rfav_count);
+				jsonDocument1.put("r user favorite count",rfav_count);
 				
 				List<String> rhtext=new ArrayList<String>();
 				List<String> rurl=new ArrayList<String>();
@@ -685,8 +739,12 @@ public class ElasticDemo {
 				List<String> rscreen_name=new ArrayList<String>();
 				List<String> rname=new ArrayList<String>();
 				List<String> ruid_str=new ArrayList<String>();
-				
-				
+				List<String> rmid_str=new ArrayList<String>();
+				List<String> rmedia_url=new ArrayList<String>();
+				List<String> rmedia_url_https=new ArrayList<String>();
+				List<String> rmurl=new ArrayList<String>();
+				List<String> rmexpandedurl=new ArrayList<String>();
+				List<String> rmdisplayurl=new ArrayList<String>();
 				
 				JSONObject rentity =(JSONObject) rjobject.get("entities");
 				
@@ -751,30 +809,77 @@ public class ElasticDemo {
 		          
 				}
 				
-				jsonDocument.put("r hashtags",rhtext);
-				jsonDocument.put("r tweet url",rurl);
-				jsonDocument.put("r tweet expanded url",rexpandedurl);
-				jsonDocument.put("r tweet display url",rdisplayurl);
-				jsonDocument.put("r user mention screen name",rscreen_name);
-				jsonDocument.put("r user mention name",rname);
-				jsonDocument.put("r user mention id",ruid_str);
+				if(rentity.has("media"))
+				{
+					System.out.println("-----retweeted has Media-----");
+				
+				JSONArray rmed=(JSONArray) rentity.get("media");
+				int length4 = rmed.length();
+		  // take each value from the json array separately
+		  
+				for(int i=0;i<length4;i++)
+				{
+				JSONObject innerObj = rmed.getJSONObject(i);
+					
+				String text1=(String) innerObj.get("id_str");
+			  		rmid_str.add(text1);
+			  		
+			  		String text2=(String) innerObj.get("media_url");
+			  		rmedia_url.add(text2);
+			  		
+			  		String text3=(String) innerObj.get("media_url_https");
+			  		rmedia_url_https.add(text3);
+		  		
+					
+				String text4=(String) innerObj.get("url");
+		  		rmurl.add(text4);
+		  	//	System.out.println("url***********"+text1);
+		  		
+		  		String text5=(String) innerObj.get("expanded_url");
+		  		rmexpandedurl.add(text5);
+		  		//System.out.println("expandedurl***********"+text2);
+		  		
+		  		String text6=(String) innerObj.get("display_url");
+		  		rmdisplayurl.add(text6);
+		  		//System.out.println("displayurl***********"+text3);
+		  		
+				}
+		  		
+				jsonDocument.put("r media id str",rmid_str);
+				jsonDocument.put("r media url",rmedia_url);
+				jsonDocument.put("r media url https ",rmedia_url_https);
+				jsonDocument.put("r m url",rmurl);
+				jsonDocument.put("r m display url",rmdisplayurl);
+				jsonDocument.put("r m expanded url",rmexpandedurl);
+				
+				}	
+				
+				jsonDocument1.put("r hashtags",rhtext);
+				jsonDocument1.put("r tweet url",rurl);
+				jsonDocument1.put("r tweet expanded url",rexpandedurl);
+				jsonDocument1.put("r tweet display url",rdisplayurl);
+				jsonDocument1.put("r user mention screen name",rscreen_name);
+				jsonDocument1.put("r user mention name",rname);
+				jsonDocument1.put("r user mention id",ruid_str);
 				
 				Boolean rfavorited=(Boolean) rjobject.get("favorited");
 				Boolean rretweeted=(Boolean) rjobject.get("retweeted");
 				Boolean rp_sensitive=(Boolean) rjobject.get("possibly_sensitive");
 				String rf_level=(String) rjobject.get("filter_level");
 				String rlang=(String) rjobject.get("lang");
-				String rtimestamp=(String) rjobject.get("timestamp_ms");
 				
-				jsonDocument.put("r is favorited",rfavorited);
-				jsonDocument.put("r is retweeted",rretweeted);
-				jsonDocument.put("r is possibly sensitive",rp_sensitive);
-				jsonDocument.put("r filter level",rf_level);
-				jsonDocument.put("r language",rlang);
-				jsonDocument.put("r timestamp",rtimestamp);
+				
+				jsonDocument1.put("r is favorited",rfavorited);
+				jsonDocument1.put("r is retweeted",rretweeted);
+				jsonDocument1.put("r is possibly sensitive",rp_sensitive);
+				jsonDocument1.put("r filter level",rf_level);
+				jsonDocument1.put("r language",rlang);
+				
 				
 				
 			}
+				
+			jsonDocument.put("retweeted user",jsonDocument1);	
 		
 	
 		 System.out.println("---------------------source-------------"+jsonDocument+"-------"+
