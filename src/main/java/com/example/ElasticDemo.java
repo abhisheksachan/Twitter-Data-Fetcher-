@@ -50,6 +50,8 @@ public class ElasticDemo {
 		 BulkRequestBuilder bulkRequest = transportClient.prepareBulk();
 		 Map<String,Object> jsonDocument = new HashMap<String,Object>();
 		 Map<String,Object> jsonDocument1 = new HashMap<String,Object>();
+		 Map<String,Object> place = new HashMap<String,Object>();
+		 Map<String,Object> place1 = new HashMap<String,Object>();
 		
 		//final Node node = nodeBuilder().clusterName("prophesee").node();
 		
@@ -322,14 +324,36 @@ public class ElasticDemo {
 				}
 				jsonDocument.put("user coordinates",cord);
 				
-/*
+
 				if(jobject.isNull("place"))
 			    {
 			       jobject.put("place","null");
+			       String p=(String) jobject.get("place");
+			       jsonDocument.put("place",p);
 			       
 			    }
-				String place=(String) jobject.get("place");
-	*/			
+				else
+				{
+					System.out.println("-----has place----");
+					JSONObject placee= (JSONObject) jobject.get("place");
+					String pid=(String) placee.get("id");
+					String purl=(String) placee.get("url");
+					String ptype=(String) placee.get("place_type");
+					String pname=(String) placee.get("name");
+					String pfullname=(String) placee.get("full_name");
+					String pcode=(String) placee.get("country_code");
+					String pcountry=(String) placee.get("country");
+					place.put("place id",pid);
+					place.put("place url",purl);
+					place.put("place type",ptype);
+					place.put("place name",pname);
+					place.put("place full name",pfullname);
+					place.put("place code",pcode);
+					place.put("country",pcountry);
+					
+					jsonDocument.put("place",place);
+					
+				}
 
 				if(jobject.isNull("contributors"))
 			    {
@@ -711,14 +735,36 @@ public class ElasticDemo {
 				}
 				jsonDocument1.put("r user coordinates",rcord);
 				
-/*
-				if(jobject.isNull("place"))
+
+				if(rjobject.isNull("place"))
 			    {
-			       jobject.put("place","null");
-			       
+			       rjobject.put("place","null");
+			       String p1=(String) rjobject.get("place");
+			       jsonDocument1.put("r place",p1);
 			    }
-				String place=(String) jobject.get("place");
-	*/			
+				else
+				{
+					System.out.println("-----retweet has place----");
+					JSONObject pla= (JSONObject) rjobject.get("place");
+					String rpid=(String) pla.get("id");
+					String rpurl=(String) pla.get("url");
+					String rptype=(String) pla.get("place_type");
+					String rpname=(String) pla.get("name");
+					String rpfullname=(String) pla.get("full_name");
+					String rpcode=(String) pla.get("country_code");
+					String rpcountry=(String) pla.get("country");
+					place1.put("r place id",rpid);
+					place1.put("r place url",rpurl);
+					place1.put("r place type",rptype);
+					place1.put("r place name",rpname);
+					place1.put("r place full name",rpfullname);
+					place1.put("r place code",rpcode);
+					place1.put("r country",rpcountry);
+					
+					jsonDocument1.put("retweeted place",place1);
+					
+				}
+		
 
 				if(rjobject.isNull("contributors"))
 			    {
