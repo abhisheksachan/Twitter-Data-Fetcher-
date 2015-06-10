@@ -31,23 +31,20 @@ import static org.elasticsearch.node.NodeBuilder.*;
 import static org.elasticsearch.common.xcontent.XContentFactory.*;
 public class ElasticDemo {
 	
-	public static void store(String msg,int num)
+	public static void store(String msg,int num,BulkRequestBuilder bulkRequest,TransportClient transportClient)
 	{
 		
 		String number= String.valueOf(num);
-		Settings settings = ImmutableSettings
-				.settingsBuilder()
-				.put("cluster.name","prophesee2")
-				.build();
 		
-		TransportClient transportClient = new TransportClient(settings);
+		
+		
 		
 		//Client client = new TransportClient().addTransportAddress(new InetSocketTransportAddress("localhost", 9300));
 		
 		
-	 transportClient = transportClient.addTransportAddress(new InetSocketTransportAddress("localhost",9300));		
+	 		
 		
-		 BulkRequestBuilder bulkRequest = transportClient.prepareBulk();
+		 
 		 Map<String,Object> jsonDocument = new HashMap<String,Object>();
 		 Map<String,Object> jsonDocument1 = new HashMap<String,Object>();
 		 Map<String,Object> place = new HashMap<String,Object>();
@@ -310,7 +307,7 @@ public class ElasticDemo {
 			      // System.out.println("coordinates**********"+cord);
 			       
 			    }
-				else
+	/*			else
 				{
 					JSONArray cor=(JSONArray) jobject.get("coordinates");
 					//System.out.print("coordinates*****");
@@ -322,36 +319,39 @@ public class ElasticDemo {
 					 }
 
 				}
+				
+		*/		
 				jsonDocument.put("user coordinates",cord);
 				
-
+				String pid="",purl="",ptype="",pname="",pfullname="",pcode="",pcountry="";
 				if(jobject.isNull("place"))
 			    {
 			       jobject.put("place","null");
 			       String p=(String) jobject.get("place");
 			       jsonDocument.put("place",p);
+			       System.out.println("---place is Nul-----");
 			       
 			    }
 				else
 				{
 					System.out.println("-----has place----");
 					JSONObject placee= (JSONObject) jobject.get("place");
-					String pid=(String) placee.get("id");
-					String purl=(String) placee.get("url");
-					String ptype=(String) placee.get("place_type");
-					String pname=(String) placee.get("name");
-					String pfullname=(String) placee.get("full_name");
-					String pcode=(String) placee.get("country_code");
-					String pcountry=(String) placee.get("country");
-					place.put("place id",pid);
-					place.put("place url",purl);
-					place.put("place type",ptype);
-					place.put("place name",pname);
-					place.put("place full name",pfullname);
-					place.put("place code",pcode);
-					place.put("country",pcountry);
+					 pid=(String) placee.get("id");
+					 purl=(String) placee.get("url");
+					 ptype=(String) placee.get("place_type");
+					 pname=(String) placee.get("name");
+					 pfullname=(String) placee.get("full_name");
+					pcode=(String) placee.get("country_code");
+					 pcountry=(String) placee.get("country");
+					 jsonDocument.put("place id",pid);
+					 jsonDocument.put("place url",purl);
+					 jsonDocument.put("place type",ptype);
+					 jsonDocument.put("place name",pname);
+					 jsonDocument.put("place full name",pfullname);
+					jsonDocument.put("place code",pcode);
+					 jsonDocument.put("country",pcountry);
 					
-					jsonDocument.put("place",place);
+					//jsonDocument.put("place",place);
 					
 				}
 
@@ -395,7 +395,7 @@ public class ElasticDemo {
 				  
 				  		String text1=(String) innerObj.get("text");
 				  		htext.add(text1);
-				  		//System.out.println("hashtags***********"+text1);
+				  		System.out.println("hashtags-------"+text1);
 				          
 				 }
 				
@@ -721,7 +721,7 @@ public class ElasticDemo {
 			      // System.out.println("coordinates**********"+cord);
 			       
 			    }
-				else
+/*				else
 				{
 					JSONArray rcor=(JSONArray) rjobject.get("coordinates");
 					//System.out.print("coordinates*****");
@@ -733,9 +733,11 @@ public class ElasticDemo {
 					 }
 
 				}
+				
+	*/			
 				jsonDocument1.put("r user coordinates",rcord);
 				
-
+				String rpid="",rpurl="",rptype="",rpname="",rpfullname="",rpcode="",rpcountry="";
 				if(rjobject.isNull("place"))
 			    {
 			       rjobject.put("place","null");
@@ -746,22 +748,22 @@ public class ElasticDemo {
 				{
 					System.out.println("-----retweet has place----");
 					JSONObject pla= (JSONObject) rjobject.get("place");
-					String rpid=(String) pla.get("id");
-					String rpurl=(String) pla.get("url");
-					String rptype=(String) pla.get("place_type");
-					String rpname=(String) pla.get("name");
-					String rpfullname=(String) pla.get("full_name");
-					String rpcode=(String) pla.get("country_code");
-					String rpcountry=(String) pla.get("country");
-					place1.put("r place id",rpid);
-					place1.put("r place url",rpurl);
-					place1.put("r place type",rptype);
-					place1.put("r place name",rpname);
-					place1.put("r place full name",rpfullname);
-					place1.put("r place code",rpcode);
-					place1.put("r country",rpcountry);
+					rpid=(String) pla.get("id");
+					 rpurl=(String) pla.get("url");
+					ptype=(String) pla.get("place_type");
+					rpname=(String) pla.get("name");
+					rpfullname=(String) pla.get("full_name");
+					// rpcode=(String) pla.get("country_code");
+					rpcountry=(String) pla.get("country");
+					jsonDocument1.put("r place id",rpid);
+					jsonDocument1.put("r place url",rpurl);
+					jsonDocument1.put("r place type",rptype);
+					jsonDocument1.put("r place name",rpname);
+					jsonDocument1.put("r place full name",rpfullname);
+					//place1.put("r place code",rpcode);
+					jsonDocument1.put("r country",rpcountry);
 					
-					jsonDocument1.put("retweeted place",place1);
+			//		jsonDocument1.put("retweeted place",place1);
 					
 				}
 		
@@ -928,8 +930,7 @@ public class ElasticDemo {
 			jsonDocument.put("retweeted user",jsonDocument1);	
 		
 	
-		 System.out.println("---------------------source-------------"+jsonDocument+"-------"+
-				 		number);
+		// System.out.println("---------------------source-------------"+jsonDocument+"-------"+number);
 		
 		bulkRequest.add(
 				transportClient

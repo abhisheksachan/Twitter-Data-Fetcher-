@@ -33,6 +33,12 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import org.elasticsearch.action.bulk.BulkRequestBuilder;
+import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.common.settings.ImmutableSettings;
+import org.elasticsearch.common.settings.Settings;
+import org.elasticsearch.common.transport.InetSocketTransportAddress;
+
 import twitter4j.HashtagEntity;
 import twitter4j.JSONArray;
 import twitter4j.JSONException;
@@ -52,9 +58,18 @@ public class FilterStreamExample {
     BlockingQueue<String> queue = new LinkedBlockingQueue<String>(10000);
     StatusesFilterEndpoint endpoint = new StatusesFilterEndpoint();
     // add some track terms
-    endpoint.trackTerms(Lists.newArrayList("twitterapi","#Modi"));
+    endpoint.trackTerms(Lists.newArrayList("#PM","#Obama","#India"));
 
     
+    
+    Settings settings = ImmutableSettings
+			.settingsBuilder()
+			.put("cluster.name","prophesee2")
+			//.put("client.transport.sniff", true)
+			.build();
+    TransportClient transportClient = new TransportClient(settings);
+    transportClient = transportClient.addTransportAddress(new InetSocketTransportAddress("localhost",9300));
+    BulkRequestBuilder bulkRequest = transportClient.prepareBulk(); 
    ElasticDemo ed=new ElasticDemo();
    // test ed = new test();
     
@@ -64,7 +79,7 @@ public class FilterStreamExample {
    
    
        
-    File file = new File("/usr/local/Sex.txt");
+    File file = new File("/usr/local/elastic.txt");
     
     if (!file.exists()) {
         try {
@@ -92,7 +107,7 @@ public class FilterStreamExample {
     client.connect();
 
     // Do whatever needs to be done with messages
-    for (int msgRead = 1; msgRead <=300;msgRead++ ) {
+    for (int msgRead = 1; msgRead <=30000;msgRead++ ) {
       String msg = queue.take();
       char s= msg.charAt(2);
     		  if(s!='d')
@@ -101,7 +116,7 @@ public class FilterStreamExample {
     		  else
     		  {continue;}
     		  
-   ed.store(msg,msgRead);	  
+   ed.store(msg,msgRead,bulkRequest,transportClient);	  
       
       //es.input(msg);
 
