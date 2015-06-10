@@ -31,25 +31,20 @@ import static org.elasticsearch.node.NodeBuilder.*;
 import static org.elasticsearch.common.xcontent.XContentFactory.*;
 public class ElasticDemo {
 	
-	public static void store(String msg,int num,BulkRequestBuilder bulkRequest,TransportClient transportClient)
+	public static void store(String msg,int num,BulkRequestBuilder bulkRequest,TransportClient transportClient,List<String> key)
 	{
 		
 		String number= String.valueOf(num);
-		
-		
-		
-		
+	
 		//Client client = new TransportClient().addTransportAddress(new InetSocketTransportAddress("localhost", 9300));
 		
-		
-	 		
-		
-		 
 		 Map<String,Object> jsonDocument = new HashMap<String,Object>();
 		 Map<String,Object> jsonDocument1 = new HashMap<String,Object>();
 		 Map<String,Object> place = new HashMap<String,Object>();
 		 Map<String,Object> place1 = new HashMap<String,Object>();
 		
+		 
+		 
 		//final Node node = nodeBuilder().clusterName("prophesee").node();
 		
 	//	final Client client   = node.client();
@@ -302,9 +297,10 @@ public class ElasticDemo {
 				
 				if(jobject.isNull("coordinates"))
 			    {
+					
 			       jobject.put("coordinates","null");
 			        cord=(String) jobject.get("coordinates");
-			      // System.out.println("coordinates**********"+cord);
+			       System.out.println("coordinates**********"+cord);
 			       
 			    }
 	/*			else
@@ -329,12 +325,12 @@ public class ElasticDemo {
 			       jobject.put("place","null");
 			       String p=(String) jobject.get("place");
 			       jsonDocument.put("place",p);
-			       System.out.println("---place is Nul-----");
+			     //  System.out.println("---place is Nul-----");
 			       
 			    }
 				else
 				{
-					System.out.println("-----has place----");
+					//System.out.println("-----has place----");
 					JSONObject placee= (JSONObject) jobject.get("place");
 					 pid=(String) placee.get("id");
 					 purl=(String) placee.get("url");
@@ -388,7 +384,7 @@ public class ElasticDemo {
 				JSONArray hash=(JSONArray) entity.get("hashtags");
 						int length = hash.length();
 				  // take each value from the json array separately
-				  
+				String k="";  
 				for(int i=0;i<length;i++)
 				{
 					JSONObject innerObj = hash.getJSONObject(i);
@@ -396,6 +392,18 @@ public class ElasticDemo {
 				  		String text1=(String) innerObj.get("text");
 				  		htext.add(text1);
 				  		System.out.println("hashtags-------"+text1);
+				  		String t="#"+text1;
+				  		
+				  		for(int j=0;j<key.size();j++)
+				  		{
+				  			k=key.get(j);
+				  			
+				  			if(k.equals(t))
+				  			{
+				  				jsonDocument.put("source keyword",k);
+				  				System.out.println("-----source keyword-------"+k);
+				  			}
+				  		}
 				          
 				 }
 				
@@ -447,7 +455,7 @@ public class ElasticDemo {
 				
 				if(entity.has("media"))
 				{
-					System.out.println("-----has Media-----");
+					//System.out.println("-----has Media-----");
 				
 				JSONArray med=(JSONArray) entity.get("media");
 				int length4 = med.length();
@@ -859,7 +867,7 @@ public class ElasticDemo {
 				
 				if(rentity.has("media"))
 				{
-					System.out.println("-----retweeted has Media-----");
+					//System.out.println("-----retweeted has Media-----");
 				
 				JSONArray rmed=(JSONArray) rentity.get("media");
 				int length4 = rmed.length();
@@ -934,7 +942,7 @@ public class ElasticDemo {
 		
 		bulkRequest.add(
 				transportClient
-				.prepareIndex("stream", "tweet", number)
+				.prepareIndex("sex", "twee", id_str)
 			    .setSource(jsonDocument));
 		 	
 		System.out.println("hello");

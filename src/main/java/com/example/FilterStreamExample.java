@@ -58,7 +58,10 @@ public class FilterStreamExample {
     BlockingQueue<String> queue = new LinkedBlockingQueue<String>(10000);
     StatusesFilterEndpoint endpoint = new StatusesFilterEndpoint();
     // add some track terms
-    endpoint.trackTerms(Lists.newArrayList("#PM","#Obama","#India"));
+    List<String> search=new ArrayList<String>();
+    search.add("#Modi");
+    search.add("#Maggi");
+    endpoint.trackTerms(search);
 
     
     
@@ -70,7 +73,7 @@ public class FilterStreamExample {
     TransportClient transportClient = new TransportClient(settings);
     transportClient = transportClient.addTransportAddress(new InetSocketTransportAddress("localhost",9300));
     BulkRequestBuilder bulkRequest = transportClient.prepareBulk(); 
-   ElasticDemo ed=new ElasticDemo();
+  // ElasticDemo ed=new ElasticDemo();
    // test ed = new test();
     
     Authentication auth = new OAuth1(consumerKey, consumerSecret, token, secret);
@@ -79,7 +82,7 @@ public class FilterStreamExample {
    
    
        
-    File file = new File("/usr/local/elastic.txt");
+    File file = new File("/usr/local/sexoporno.txt");
     
     if (!file.exists()) {
         try {
@@ -116,7 +119,7 @@ public class FilterStreamExample {
     		  else
     		  {continue;}
     		  
-   ed.store(msg,msgRead,bulkRequest,transportClient);	  
+   ElasticDemo.store(msg,msgRead,bulkRequest,transportClient,search);	  
       
       //es.input(msg);
 
